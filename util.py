@@ -1,9 +1,12 @@
 import base64
-
 import streamlit as st
 from PIL import ImageOps, Image
 import numpy as np
+import tensorflow as tf
 
+# Load your model and class_names here
+# model = tf.keras.models.load_model('your_model_path')
+# class_names = ['Class1', 'Class2', ...]
 
 def set_background(image_file):
     """
@@ -28,7 +31,6 @@ def set_background(image_file):
     """
     st.markdown(style, unsafe_allow_html=True)
 
-
 def classify(image, model, class_names):
     """
     This function takes an image, a model, and a list of class names and returns the predicted class and confidence
@@ -42,24 +44,38 @@ def classify(image, model, class_names):
     Returns:
         A tuple of the predicted class name and the confidence score for that prediction.
     """
-    # convert image to (224, 224)
+    # Resize and preprocess the image
     image = ImageOps.fit(image, (224, 224), Image.Resampling.LANCZOS)
-
-    # convert image to numpy array
     image_array = np.asarray(image)
-
-    # normalize image
     normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
 
-    # set model input
-    data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
-    data[0] = normalized_image_array
+    # Expand dimensions to match the model input shape
+    data = np.expand_dims(normalized_image_array, axis=0)
 
-    # make prediction
+    # Make prediction
     prediction = model.predict(data)
-    # index = np.argmax(prediction)
-    index = 0 if prediction[0][0] > 0.95 else 1
-    class_name = class_names[index]
-    confidence_score = prediction[0][index]
+
+    # Get the predicted class index
+    predicted_class_index = np.argmax(prediction)
+
+    # Get the class name and confidence score
+    class_name = class_names[predicted_class_index]
+    confidence_score = prediction[0][predicted_class_index]
 
     return class_name, confidence_score
+
+# Streamlit app code
+st.title("Image Classification App")
+uploaded_image = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+
+if uploaded_image is not None:
+    # Display the uploaded image
+    st.image(uploaded_image, caption="Uploaded Image", use_column_width=True)
+    
+    # Classify the image
+    image = Image.open(uploaded_image)
+    class_name, confidence_score = classify(image, model, class_names)
+
+    # Display the result
+    st.write(f"Predicted Class: {class_name}")
+    st.write(f"Confidence Score: {confidence_score:.4f}")

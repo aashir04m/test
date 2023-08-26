@@ -56,15 +56,13 @@ def classify(image, model):
     # print("data", data)
     data[0] = normalized_image_array
 
-    classes = {}
-
-    # classes = {4: ('nv', ' melanocytic nevi'),
-    #        6: ('mel', 'melanoma'),
-    #        2 :('bkl', 'benign keratosis-like lesions'),
-    #        1:('bcc' , ' basal cell carcinoma'),
-    #        5: ('vasc', ' pyogenic granulomas and hemorrhage'),
-    #        0: ('akiec', 'Actinic keratoses and intraepithelial carcinomae'),
-    #        3: ('df', 'dermatofibroma')}
+    classes = {4: ('nv', ' melanocytic nevi'),
+           6: ('mel', 'melanoma'),
+           2 :('bkl', 'benign keratosis-like lesions'),
+           1:('bcc' , ' basal cell carcinoma'),
+           5: ('vasc', ' pyogenic granulomas and hemorrhage'),
+           0: ('akiec', 'Actinic keratoses and intraepithelial carcinomae'),
+           3: ('df', 'dermatofibroma')}
     
     # # make prediction
     # prediction = model.predict(data)
@@ -88,7 +86,7 @@ def classify(image, model):
     # print(result)
     max_prob = max(result[0])
     class_ind = list(result[0]).index(max_prob)
-    class_name = classes[class_ind]
+    class_name = classes[0]
     print(class_name)
 
     return class_name

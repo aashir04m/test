@@ -29,7 +29,7 @@ def set_background(image_file):
     st.markdown(style, unsafe_allow_html=True)
 
 
-def classify(img, model):
+def classify(image, model):
     """
     This function takes an image, a model, and a list of class names and returns the predicted class and confidence
     score of the image.
@@ -82,8 +82,8 @@ def classify(img, model):
     # cv2.imwrite(img)
     # cv2_imshow(img)
     # img = cv2.resize(img, (28, 28))
-    img = image
-    result = model.predict(img.reshape(1, 28, 28, 3))
+    # img = image
+    result = model.predict(image.reshape(1, 28, 28, 3))
     max_prob = max(result[0])
     class_ind = list(result[0]).index(max_prob)
     class_name = classes[class_ind]

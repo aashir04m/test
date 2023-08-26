@@ -83,8 +83,9 @@ def classify(image, model):
     # cv2_imshow(img)
     # img = cv2.resize(img, (28, 28))
     result = model.predict(data)
-    # print(result)
+    print(result)
     max_prob = max(result[0])
+    print("max_prob", max_prob)
     class_ind = list(result[0]).index(max_prob)
     print("class_ind", class_ind)
     class_name = classes[0]

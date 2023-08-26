@@ -1,12 +1,9 @@
 import base64
+
 import streamlit as st
 from PIL import ImageOps, Image
 import numpy as np
-import tensorflow as tf
 
-# Load your model and class_names here
-# model = tf.keras.models.load_model('your_model_path')
-# class_names = ['Class1', 'Class2', ...]
 
 def set_background(image_file):
     """
@@ -31,47 +28,38 @@ def set_background(image_file):
     """
     st.markdown(style, unsafe_allow_html=True)
 
+
 def classify(image, model, class_names):
-    try:
-        # Resize and preprocess the image
-        image = ImageOps.fit(image, (224, 224), Image.Resampling.LANCZOS)
-        image_array = np.asarray(image)
-        normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
+    """
+    This function takes an image, a model, and a list of class names and returns the predicted class and confidence
+    score of the image.
 
-        # Expand dimensions to match the model input shape
-        data = np.expand_dims(normalized_image_array, axis=0)
+    Parameters:
+        image (PIL.Image.Image): An image to be classified.
+        model (tensorflow.keras.Model): A trained machine learning model for image classification.
+        class_names (list): A list of class names corresponding to the classes that the model can predict.
 
-        # Make prediction
-        prediction = model.predict(data)
+    Returns:
+        A tuple of the predicted class name and the confidence score for that prediction.
+    """
+    # convert image to (224, 224)
+    image = ImageOps.fit(image, (28, 28), Image.Resampling.LANCZOS)
 
-        # Get the predicted class index
-        predicted_class_index = np.argmax(prediction)
+    # convert image to numpy array
+    image_array = np.asarray(image)
 
-        # Get the class name and confidence score
-        class_name = class_names[predicted_class_index]
-        confidence_score = prediction[0][predicted_class_index]
+    # normalize image
+    normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
 
-        return class_name, confidence_score
-    except Exception as e:
-        # Print the error for debugging
-        print(f"Error during classification: {e}")
-        return "Error", 0.0
+    # set model input
+    data = np.ndarray(shape=(1, 28, 28, 3), dtype=np.float32)
+    data[0] = normalized_image_array
 
-# Streamlit app code
-st.title("Image Classification App")
-uploaded_image = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+    # make prediction
+    prediction = model.predict(data)
+    # index = np.argmax(prediction)
+    index = 0 if prediction[0][0] > 0.95 else 1
+    class_name = class_names[index]
+    confidence_score = prediction[0][index]
 
-if uploaded_image is not None:
-    # Display the uploaded image
-    st.image(uploaded_image, caption="Uploaded Image", use_column_width=True)
-    
-    # Classify the image
-    image = Image.open(uploaded_image)
-    class_name, confidence_score = classify(image, model, class_names)
-
-    # Display the result
-    st.write(f"Predicted Class: {class_name}")
-    st.write(f"Confidence Score: {confidence_score:.4f}")
-
-# Set the background image for the entire app
-set_background('background.jpg')  # Replace 'background.jpg' with your background image path
+    return class_name, confidence_score

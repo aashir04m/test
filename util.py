@@ -49,11 +49,12 @@ def classify(image, model):
     image_array = np.asarray(image)
 
     # normalize image
-    # normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
+    normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
 
     # set model input
     data = np.ndarray(shape=(1, 28, 28, 3), dtype=np.float32)
-    # data[0] = normalized_image_array
+    print("data", data)
+    data[0] = normalized_image_array
 
     classes = {4: ('nv', ' melanocytic nevi'),
            6: ('mel', 'melanoma'),

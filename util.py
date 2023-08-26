@@ -86,6 +86,7 @@ def classify(image, model):
     # print(result)
     max_prob = max(result[0])
     class_ind = list(result[0]).index(max_prob)
+    print("class_ind", class_ind)
     class_name = classes[0]
     print(class_name)
 

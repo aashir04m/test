@@ -29,7 +29,7 @@ def set_background(image_file):
     st.markdown(style, unsafe_allow_html=True)
 
 
-def classify(image, model, class_names):
+def classify(image, model):
     """
     This function takes an image, a model, and a list of class names and returns the predicted class and confidence
     score of the image.
@@ -49,11 +49,11 @@ def classify(image, model, class_names):
     image_array = np.asarray(image)
 
     # normalize image
-    normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
+    # normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
 
     # set model input
     data = np.ndarray(shape=(1, 28, 28, 3), dtype=np.float32)
-    data[0] = normalized_image_array
+    # data[0] = normalized_image_array
 
     classes = {4: ('nv', ' melanocytic nevi'),
            6: ('mel', 'melanoma'),
@@ -65,12 +65,12 @@ def classify(image, model, class_names):
     
     # make prediction
     prediction = model.predict(data)
-    index = np.argmax(prediction)
+    # index = np.argmax(prediction)
     max_prob = max(prediction[0])
     class_ind = list(prediction[0]).index(max_prob)
     class_name = classes[class_ind]
     # index = 0 if prediction[0][0] > 0.95 else 1
     # class_name = class_names[index]
-    confidence_score = prediction[0][index]
+    # confidence_score = prediction[0][class_ind]
 
-    return class_name, confidence_score
+    return class_name

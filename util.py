@@ -32,37 +32,30 @@ def set_background(image_file):
     st.markdown(style, unsafe_allow_html=True)
 
 def classify(image, model, class_names):
-    """
-    This function takes an image, a model, and a list of class names and returns the predicted class and confidence
-    score of the image.
+    try:
+        # Resize and preprocess the image
+        image = ImageOps.fit(image, (224, 224), Image.Resampling.LANCZOS)
+        image_array = np.asarray(image)
+        normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
 
-    Parameters:
-        image (PIL.Image.Image): An image to be classified.
-        model (tensorflow.keras.Model): A trained machine learning model for image classification.
-        class_names (list): A list of class names corresponding to the classes that the model can predict.
+        # Expand dimensions to match the model input shape
+        data = np.expand_dims(normalized_image_array, axis=0)
 
-    Returns:
-        A tuple of the predicted class name and the confidence score for that prediction.
-    """
-    # Resize and preprocess the image
-    image = ImageOps.fit(image, (224, 224), Image.Resampling.LANCZOS)
-    image_array = np.asarray(image)
-    normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
+        # Make prediction
+        prediction = model.predict(data)
 
-    # Expand dimensions to match the model input shape
-    data = np.expand_dims(normalized_image_array, axis=0)
+        # Get the predicted class index
+        predicted_class_index = np.argmax(prediction)
 
-    # Make prediction
-    prediction = model.predict(data)
+        # Get the class name and confidence score
+        class_name = class_names[predicted_class_index]
+        confidence_score = prediction[0][predicted_class_index]
 
-    # Get the predicted class index
-    predicted_class_index = np.argmax(prediction)
-
-    # Get the class name and confidence score
-    class_name = class_names[predicted_class_index]
-    confidence_score = prediction[0][predicted_class_index]
-
-    return class_name, confidence_score
+        return class_name, confidence_score
+    except Exception as e:
+        # Print the error for debugging
+        print(f"Error during classification: {e}")
+        return "Error", 0.0
 
 # Streamlit app code
 st.title("Image Classification App")
@@ -79,3 +72,6 @@ if uploaded_image is not None:
     # Display the result
     st.write(f"Predicted Class: {class_name}")
     st.write(f"Confidence Score: {confidence_score:.4f}")
+
+# Set the background image for the entire app
+set_background('background.jpg')  # Replace 'background.jpg' with your background image path

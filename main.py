@@ -9,7 +9,7 @@ from util import classify, set_background
 set_background('./bgs/bg.png')
 
 # set title
-st.title('Pneumonia')
+st.title('Chest X-Ray')
 
 # set header
 st.header('Please upload a chest X-ray image')

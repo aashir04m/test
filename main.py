@@ -27,7 +27,7 @@ model = load_model('./model/Skin_Cancer.h5')
 
 class_names = []
 
-with open('labels1.txt', 'r') as f:
+with open('./model/labels1.txt', 'r') as f:
     for line in f.readlines():
         label = line.strip()
         class_names.append(label)

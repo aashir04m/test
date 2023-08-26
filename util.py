@@ -29,7 +29,7 @@ def set_background(image_file):
     st.markdown(style, unsafe_allow_html=True)
 
 
-def classify(image, model):
+def classify(img, model):
     """
     This function takes an image, a model, and a list of class names and returns the predicted class and confidence
     score of the image.
@@ -43,7 +43,7 @@ def classify(image, model):
         A tuple of the predicted class name and the confidence score for that prediction.
     """
     # convert image to (224, 224)
-    # image = ImageOps.fit(image, (28, 28), Image.Resampling.LANCZOS)
+    image = ImageOps.fit(image, (28, 28))
 
     # # convert image to numpy array
     # image_array = np.asarray(image)
@@ -78,10 +78,11 @@ def classify(image, model):
     # # class_name = class_names[index]
     # # confidence_score = prediction[0][class_ind]
 
-    img = cv2.imread(image)
+    # img = cv2.imread(image)
     # cv2.imwrite(img)
-    cv2_imshow(img)
-    img = cv2.resize(img, (28, 28))
+    # cv2_imshow(img)
+    # img = cv2.resize(img, (28, 28))
+    img = image
     result = model.predict(img.reshape(1, 28, 28, 3))
     max_prob = max(result[0])
     class_ind = list(result[0]).index(max_prob)

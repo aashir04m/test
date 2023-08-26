@@ -55,6 +55,14 @@ def classify(image, model, class_names):
     data = np.ndarray(shape=(1, 28, 28, 3), dtype=np.float32)
     data[0] = normalized_image_array
 
+    classes = {4: ('nv', ' melanocytic nevi'),
+           6: ('mel', 'melanoma'),
+           2 :('bkl', 'benign keratosis-like lesions'),
+           1:('bcc' , ' basal cell carcinoma'),
+           5: ('vasc', ' pyogenic granulomas and hemorrhage'),
+           0: ('akiec', 'Actinic keratoses and intraepithelial carcinomae'),
+           3: ('df', 'dermatofibroma')}
+    
     # make prediction
     prediction = model.predict(data)
     # index = np.argmax(prediction)

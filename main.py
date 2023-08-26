@@ -21,9 +21,9 @@ file = st.file_uploader('', type=['jpeg', 'jpg', 'png'])
 model = load_model('./model/Skin_Cancer.h5')
 
 # load class names
-# with open('./model/labels1.txt', 'r') as f:
-#     class_names = [a[:-1].split(' ')[1] for a in f.readlines()]
-#     f.close()
+with open('./model/labels1.txt', 'r') as f:
+    class_names = [a[:-1].split(' ')[1] for a in f.readlines()]
+    f.close()
 
 # class_names = []
 
@@ -33,7 +33,7 @@ model = load_model('./model/Skin_Cancer.h5')
 #         class_names.append(label)
 #         f.close()
 
-# print(class_names)
+print(class_names)
 
 
 # display image

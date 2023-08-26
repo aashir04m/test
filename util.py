@@ -46,15 +46,15 @@ def classify(image, model):
     image = ImageOps.fit(image, (28, 28), Image.Resampling.LANCZOS)
 
     # # convert image to numpy array
-    # image_array = np.asarray(image)
+    image_array = np.asarray(image)
 
     # # normalize image
-    # normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
+    normalized_image_array = (image_array.astype(np.float32) / 255.0) - 1
 
     # # set model input
-    # data = np.ndarray(shape=(1, 28, 28, 3), dtype=np.float32)
-    # print("data", data)
-    # data[0] = normalized_image_array
+    data = np.ndarray(shape=(1, 28, 28, 3), dtype=np.float32)
+    print("data", data)
+    data[0] = normalized_image_array
 
     classes = {4: ('nv', ' melanocytic nevi'),
            6: ('mel', 'melanoma'),
@@ -82,7 +82,8 @@ def classify(image, model):
     # cv2.imwrite(img)
     # cv2_imshow(img)
     # img = cv2.resize(img, (28, 28))
-    result = model.predict(image.reshape(1, 28, 28, 3))
+    result = model.predict(data)
+    print(result)
     max_prob = max(result[0])
     class_ind = list(result[0]).index(max_prob)
     class_name = classes[class_ind]

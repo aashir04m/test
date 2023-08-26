@@ -71,6 +71,6 @@ def classify(image, model, class_names):
     class_name = classes[class_ind]
     # index = 0 if prediction[0][0] > 0.95 else 1
     # class_name = class_names[index]
-    confidence_score = prediction[0][index]
+    confidence_score = prediction[0][class_ind]
 
     return class_name, confidence_score
